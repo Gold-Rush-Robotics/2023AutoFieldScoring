@@ -1,10 +1,12 @@
 from flask import Flask
 from flask import render_template
 import time
+from field import Field
 
 app = Flask(__name__)
 
 start_time = 0
+field = Field()
 
 @app.route("/")
 def main_screen(points=None):
@@ -15,11 +17,17 @@ def main_screen(points=None):
 @app.route("/match")
 def during_match():
     global start_time
-    pass
+    return render_template('match.jinja', start_time=start_time)
+    
 
 def post_match():
     global start_time
     pass
+
+@app.route("/get_score")
+def get_score():
+    global field
+    return {"score":field.score}
 
 @app.route("/start")
 def start():

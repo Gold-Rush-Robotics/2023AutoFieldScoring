@@ -1,0 +1,63 @@
+{% extends "base.jinja" %}
+{% block title %}Match Page{% endblock %}
+{% block head %}
+    {{ super() }}
+    <style type="text/css">
+        .important { color: #336699; }
+    </style>
+{% endblock %}
+{% block content %}
+    {{super()}}
+    <div id="timer" style="text-align:center;"></div>
+    <div id="score" style="text-align:center;"></div>
+    <script>
+        // Get the start time in milliseconds
+        const startTime = Date.now();
+
+        // Function to update the timer
+        function updateTimer() {
+            // Get the current time in milliseconds
+            const currentTime = Date.now();
+
+            // Calculate the time difference in seconds
+            const timeDifference = Math.floor((currentTime - startTime) / 1000);
+            
+            // Calculate hours, minutes, and seconds
+            const minutes = Math.floor((timeDifference % 3600) / 60);
+            const seconds = timeDifference % 60;
+            const milliseconds = timeDifference;
+
+            // Display the time difference
+            document.getElementById('timer').textContent = `Time since start: ${minutes}m ${seconds}s `;
+        }
+
+        async function getScore() {
+            try {
+                const response = await fetch('http://127.0.0.1:5000/get_score', {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json'
+                        // You can add more headers if needed
+                    }
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    console.log('Score:', data.score);
+                    document.getElementById('score').textContent = `Score: ${data.score}`;
+                    // Do something with the score data here
+                } else {
+                    console.error('Error fetching score:', response.statusText);
+                }
+            } catch (error) {
+                console.error('Error fetching score:', error);
+            }
+}
+
+
+        // Update the timer every second (1000 milliseconds)
+        setInterval(updateTimer, 1);
+        setInterval(getScore, 1);
+    </script>
+
+{% endblock %}
