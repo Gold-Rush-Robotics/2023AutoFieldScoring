@@ -1,7 +1,6 @@
 from flask import Flask
 from flask import render_template
-from time import perf_time
-
+import time
 
 app = Flask(__name__)
 
@@ -25,5 +24,5 @@ def post_match():
 @app.route("/start")
 def start():
     global start_time
-    start_time = perf_counter()
+    start_time = time.time_ns()
     return during_match()
