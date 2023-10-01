@@ -1,30 +1,52 @@
 import cv2 as cv
 import numpy as np
 
-blue = (44, 13, 420, 308)
-red = (467, 19, 135, 141)
+blue0 = (50, 20, 408, 290)
+blue1 = (405, 170, 124, 162)
+red = (475, 27, 129, 131)
 
 def red_pipeline(img:cv.Mat):
     imCrop = img[int(red[1]):int(red[1]+red[3]), int(red[0]):int(red[0]+red[2])]
     hsv = cv.cvtColor(imCrop, cv.COLOR_BGR2HSV)
     cubePixels = 0
-    for row in imCrop:
+    for row in hsv:
         for h, _, _ in row:
-            if h > 5 and h < 7:
+            if not (h > 2 and h < 19):
                 cubePixels += 1
-    print(cubePixels)
-    cv.imshow("test", imCrop)
+    print(np.round(cubePixels/833))
+    cv.imshow("red", imCrop)
 
 
 def blue_pipeline(img:cv.Mat):
-    imCrop = img[int(blue[1]):int(blue[1]+ blue[3]), int(blue[0]):int(blue[0]+blue[2])]
-    cv.imshow("test2", imCrop)
+    imCrop0 = img[int(blue0[1]):int(blue0[1]+ blue0[3]), int(blue0[0]):int(blue0[0]+blue0[2])]
+    imCrop1 = img[int(blue1[1]):int(blue1[1]+ blue1[3]), int(blue1[0]):int(blue1[0]+blue1[2])]
+    hsv0 = cv.cvtColor(imCrop0, cv.COLOR_BGR2HSV)
+    hsv1 = cv.cvtColor(imCrop1, cv.COLOR_BGR2HSV)
+    cubePixels = 0
+    for row in hsv0:
+        for h, _, _ in row:
+            if not (h > 60 and h < 130):
+                cubePixels += 1
+    #for row in hsv1:
+     #   for h, _, _ in row:
+      #      if not (h > 70 and h < 110):
+       #         cubePixels += 1
+    #print(np.round(cubePixels))
+    print(cubePixels)
+    cv.imshow("blue", imCrop0)
+    cv.imshow("blue_corner", imCrop1)
 
 if __name__ == "__main__":
-
+    #initialize cam object
     cam = cv.VideoCapture(0)
-    while True:
+    #read cam images to warm-up cameras 
+    for i in range(6):
         ret, img = cam.read()
-        red_pipeline(img)
-        blue_pipeline(img)
-        cv.waitKey(0)
+    while True:
+        
+        ret, img = cam.read()
+        #red_pipeline(img)
+        #blue_pipeline(img)
+        key = cv.waitKey(1)
+        if key == ord('q'):
+            break
