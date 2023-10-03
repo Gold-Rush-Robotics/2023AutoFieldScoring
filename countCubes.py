@@ -11,10 +11,10 @@ def red_pipeline(img:cv.Mat):
     cubePixels = 0
     for row in hsv:
         for h, _, _ in row:
-            if not (h > 2 and h < 19):
+            if not(h > 2 and h < 19):
                 cubePixels += 1
-    print(np.round(cubePixels/833))
-    cv.imshow("red", imCrop)
+    print(f"Red: {np.round(cubePixels/833) : .2f}")
+    cv.imshow("Red", imCrop)
 
 
 def blue_pipeline(img:cv.Mat):
@@ -25,16 +25,15 @@ def blue_pipeline(img:cv.Mat):
     cubePixels = 0
     for row in hsv0:
         for h, _, _ in row:
-            if not (h > 60 and h < 130):
+            if h > 13 and h < 33:
                 cubePixels += 1
-    #for row in hsv1:
-     #   for h, _, _ in row:
-      #      if not (h > 70 and h < 110):
-       #         cubePixels += 1
-    #print(np.round(cubePixels))
-    print(cubePixels)
-    cv.imshow("blue", imCrop0)
-    cv.imshow("blue_corner", imCrop1)
+    for row in hsv1:
+        for h, _, _ in row:
+            if h > 20 and h < 40:
+                cubePixels += 1
+    print(f"Blue: {np.round(cubePixels/3333) : .2f}")
+    cv.imshow("Blue", imCrop0)
+    cv.imshow("Blue corner", imCrop1)
 
 if __name__ == "__main__":
     #initialize cam object
@@ -43,10 +42,9 @@ if __name__ == "__main__":
     for i in range(6):
         ret, img = cam.read()
     while True:
-        
         ret, img = cam.read()
         #red_pipeline(img)
-        #blue_pipeline(img)
+        blue_pipeline(img)
         key = cv.waitKey(1)
         if key == ord('q'):
             break
