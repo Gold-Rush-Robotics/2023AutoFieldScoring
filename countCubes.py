@@ -11,7 +11,7 @@ def cropByHSV(img:cv.Mat, lower_h:int, higher_h:int ):
     hsvImg = cv.cvtColor(img, cv.COLOR_BGR2HSV)
     lower_h = np.array([lower_h, 0, 0], dtype = "uint8")
     upper_h = np.array([higher_h, 255, 255], dtype = "uint8")
-    blur = cv.GaussianBlur(hsvImg, (5,5), 0)
+    blur = cv.medianBlur(hsvImg, 15)
     mask = cv.inRange(blur, lower_h, upper_h)
     masked = cv.bitwise_and(blur, blur, mask = mask)
     cv.imshow("mask", masked)
@@ -76,7 +76,7 @@ if __name__ == "__main__":
         ret, img = cam.read()
         #red_pipeline(img)
         #blue_pipeline(img)
-        cropByHSV(img, 6, 15)
+        cropByHSV(img, 5, 15)
         key = cv.waitKey(1)
         if key == ord('q'):
             break
