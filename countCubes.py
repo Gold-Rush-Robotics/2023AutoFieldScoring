@@ -6,6 +6,23 @@ blue0 = (50, 20, 408, 290)
 blue1 = (405, 170, 124, 162)
 red = (475, 27, 129, 131)
 
+def cropByHSV(img:cv.Mat, lower_h:int, higher_h:int ):
+    #create mask 
+    hsvImg = cv.cvtColor(img, cv.COLOR_BGR2HSV)
+    lower_h = np.array([lower_h, 0, 0], dtype = "uint8")
+    upper_h = np.array([higher_h, 255, 255], dtype = "uint8")
+    blur = cv.GaussianBlur(hsvImg, (5,5), 0)
+    mask = cv.inRange(blur, lower_h, upper_h)
+    masked = cv.bitwise_and(blur, blur, mask = mask)
+    cv.imshow("mask", masked)
+
+    #convert masked to grayscale
+    gray = cv.cvtColor(masked, cv.COLOR_BGR2GRAY)
+
+    #find lines
+    x = cv.Sobel(src = gray, ddepth = cv.CV_64F, dx = 1, dy = 0, ksize = 5)
+    cv.imshow("x", x)
+
 def red_pipeline(img:cv.Mat):
     #crop image and convert to hsv
     imCrop = img[int(red[1]):int(red[1]+red[3]), int(red[0]):int(red[0]+red[2])]
@@ -57,8 +74,9 @@ if __name__ == "__main__":
         ret, img = cam.read()
     while True:
         ret, img = cam.read()
-        red_pipeline(img)
-        blue_pipeline(img)
+        #red_pipeline(img)
+        #blue_pipeline(img)
+        cropByHSV(img, 6, 15)
         key = cv.waitKey(1)
         if key == ord('q'):
             break
