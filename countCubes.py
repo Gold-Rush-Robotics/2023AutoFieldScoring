@@ -1,37 +1,16 @@
 import cv2 as cv
 import numpy as np
+from cropByHsv import cropByHSV
 
 #roi coordinates
 blue0 = (50, 20, 408, 290)
 blue1 = (405, 170, 124, 162)
 red = (475, 27, 129, 131)
 
-def cropByHSV(img:cv.Mat, lower_h:int, higher_h:int ):
-    #create mask 
-    hsvImg = cv.cvtColor(img, cv.COLOR_BGR2HSV)
-    lower_h = np.array([lower_h, 0, 0], dtype = "uint8")
-    upper_h = np.array([higher_h, 255, 255], dtype = "uint8")
-    blur = cv.medianBlur(hsvImg, 15)
-    mask = cv.inRange(blur, lower_h, upper_h)
-    masked = cv.bitwise_and(blur, blur, mask = mask)
-    cv.imshow("mask", masked)
-
-    #convert masked to grayscale
-    gray = cv.cvtColor(masked, cv.COLOR_BGR2GRAY)
-
-    #find lines
-    x = cv.Sobel(src = gray, ddepth = cv.CV_64F, dx = 1, dy = 0, ksize = 5)
-    cv.imshow("x", x)
-
 def red_pipeline(img:cv.Mat):
     #crop image and convert to hsv
     imCrop = img[int(red[1]):int(red[1]+red[3]), int(red[0]):int(red[0]+red[2])]
     hsv = cv.cvtColor(imCrop, cv.COLOR_BGR2HSV)
-    cubePixels = 0
-    for row in hsv:
-        for h, _, _ in row:
-            if not(h > 2 and h < 19):
-                cubePixels += 1
     #define color bounds
     lower_h = np.array([2, 0, 0], dtype = "uint8")
     upper_h = np.array([19, 255, 255], dtype = "uint8")
@@ -41,6 +20,7 @@ def red_pipeline(img:cv.Mat):
     output = cv.bitwise_and(hsv, hsv, mask = mask)
     print(f"Small Cubes: {np.sum(output)}")
     cv.imshow("Red", imCrop)
+    cv.imshow("mask", mask)
 
 
 def blue_pipeline(img:cv.Mat):
@@ -76,7 +56,10 @@ if __name__ == "__main__":
         ret, img = cam.read()
         #red_pipeline(img)
         #blue_pipeline(img)
-        cropByHSV(img, 5, 15)
+        lower_hsv = np.array([[5, 0, 167]], dtype = "uint8")
+        upper_hsv = np.array([15, 255, 255], dtype = "uint8")
+        cropByHSV(img, lower_hsv, upper_hsv)
+
         key = cv.waitKey(1)
         if key == ord('q'):
             break
