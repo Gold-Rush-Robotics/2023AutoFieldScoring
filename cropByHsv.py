@@ -24,13 +24,8 @@ def cropByHSV(img:cv.Mat, lower_hsv:np.array, upper_hsv:np.array):
     for points in lines:
       # Extracted points nested in the list
         x1,y1,x2,y2=points[0]
-        # Draw the lines joing the points
-        # On the original image
-        cv.line(img,(x1,y1),(x2,y2),(0,255,0),2)
         # Maintain a simples lookup list for points
         lines_list.append([(x1,y1),(x2,y2)])
-     
-    cv.imshow("img", img)
-
+    return lines_list
 
 
