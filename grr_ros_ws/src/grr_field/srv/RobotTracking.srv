@@ -1,0 +1,4 @@
+std_msgs/Header header
+---
+bool is_moved
+bool is_in_zone

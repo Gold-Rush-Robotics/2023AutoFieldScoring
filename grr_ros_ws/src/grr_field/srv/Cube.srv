@@ -1,0 +1,6 @@
+std_msgs/Header header
+---
+int64 small_cubes_in_correct
+int64 large_cubes_in_correct
+int64 cubes_in_zone
+
