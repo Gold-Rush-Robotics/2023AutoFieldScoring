@@ -58,8 +58,15 @@ if __name__ == "__main__":
         #blue_pipeline(img)
         lower_hsv = np.array([[5, 0, 167]], dtype = "uint8")
         upper_hsv = np.array([15, 255, 255], dtype = "uint8")
-        cropByHSV(img, lower_hsv, upper_hsv)
+        lines = cropByHSV(img, lower_hsv, upper_hsv)
 
+        x0, y0 = lines[0]
+        x1, y1 = lines[2]
+        cv.line(img, x0, y0, 255, 10)
+        cv.line(img, x1, y1, 255, 10)
+
+
+        cv.imshow("img", img)
         key = cv.waitKey(1)
         if key == ord('q'):
             break
