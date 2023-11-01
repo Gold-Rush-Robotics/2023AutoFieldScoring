@@ -21,6 +21,7 @@ setup(
     entry_points={
         'console_scripts': [
             'field = grr_field.field:main',
+            'viewer = grr_field.testImage:main',
         ],
     },
 )
