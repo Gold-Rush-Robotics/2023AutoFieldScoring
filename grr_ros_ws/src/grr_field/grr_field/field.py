@@ -3,6 +3,7 @@
 
 from typing import List
 import rclpy
+import cv2 as cv
 from rclpy.node import Node
 from rclpy.context import Context
 from rclpy.parameter import Parameter
@@ -33,6 +34,21 @@ class Field(Node):
     def start(self, data:Bool) -> None:
         self.get_logger().info(f"Got a message on start saying {data}")
     
+    def getCam1(self, req:Header, ret:Image): 
+        cam = cv.videoCapture(0)
+        cv_img = cam.read()
+        #convert to ros img
+        bridge = CvBridge()
+        ret = bridge.cv2_to_imgmsg(cv_img, encoding="passthrough")
+        return ret
+
+    def getCam2(self, req:Header, ret:Image):
+        cam = cv.videoCapture(1)
+        cv_img = cam.read()
+        #convert to ros img
+        bridge = CvBridge()
+        ret = bridge.cv2_to_imgmsg(cv_img, encoding="passthrough")
+        return ret
     
 def main():
     rclpy.init()
