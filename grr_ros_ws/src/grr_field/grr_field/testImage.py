@@ -7,7 +7,7 @@ import rclpy
 import cv2
 
 
-from grr_field_interfaces import ImageRequest
+from grr_field_interfaces.srv import ImageRequest
 
 class Viewer(Node):
     def __init__(self) -> None:
