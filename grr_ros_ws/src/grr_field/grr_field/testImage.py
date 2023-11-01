@@ -12,7 +12,7 @@ from grr_field_interfaces.srv import ImageRequest
 class Viewer(Node):
     def __init__(self) -> None:
         super().__init__("viewer")
-        self.cli = self.create_client(ImageRequest, 'add_two_ints')
+        self.cli = self.create_client(ImageRequest, 'getCam')
         while not self.cli.wait_for_service(timeout_sec=1.0):
             self.get_logger().info('service not available, waiting again...')
         self.req = ImageRequest.Request()
@@ -22,8 +22,7 @@ class Viewer(Node):
         self.req.cam = camNum
         self.future = self.cli.call_async(self.req)
         rclpy.spin_until_future_complete(self, self.future)
-       
-        return  self.bridge.imgmsg_to_cv2(self.future.result(), "passthrough")
+        self.bridge.imgmsg_to_cv2(self.future.result().frame, "passthrough")
     
 def main():
     rclpy.init()
