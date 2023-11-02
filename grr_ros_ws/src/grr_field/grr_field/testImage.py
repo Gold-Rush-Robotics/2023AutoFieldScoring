@@ -22,7 +22,7 @@ class Viewer(Node):
         self.req.cam = camNum
         self.future = self.cli.call_async(self.req)
         rclpy.spin_until_future_complete(self, self.future)
-        self.bridge.imgmsg_to_cv2(self.future.result().frame, "passthrough")
+        return self.bridge.imgmsg_to_cv2(self.future.result().frame, "passthrough")
     
 def main():
     rclpy.init()
