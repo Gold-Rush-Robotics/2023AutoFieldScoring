@@ -7,15 +7,10 @@ import cv2 as cv
 from rclpy.node import Node
 from rclpy.context import Context
 from rclpy.parameter import Parameter
-
 from std_msgs.msg import Bool, Header
 from sensor_msgs.msg import Image
-
 from cv_bridge import CvBridge
-
 from grr_field_interfaces.srv import ImageRequest
-
-import cv2
 
 
 class Field(Node):
@@ -24,7 +19,7 @@ class Field(Node):
         self.publisher = self.create_publisher(Bool, "end_button", 10)
         self.subscription = self.create_subscription(Bool, "start", self.start, 10)
         #for retrieving field imgs
-        self.cams = [cv2.VideoCapture(0), cv2.VideoCapture(1)]
+        self.cams = [cv.VideoCapture(0), cv.VideoCapture(1)]
         self.bridge = CvBridge()
         self.getCam = self.create_service(ImageRequest, 'getCam', self.cam_callback)
     
