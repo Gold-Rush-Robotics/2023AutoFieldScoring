@@ -19,13 +19,23 @@ class Field(Node):
         self.publisher = self.create_publisher(Bool, "end_button", 10)
         self.subscription = self.create_subscription(Bool, "start", self.start, 10)
         #for retrieving field imgs
-        self.cams = [cv.VideoCapture(0), cv.VideoCapture(1)]
+        self.cams = [cv.VideoCapture(0), cv.VideoCapture(2)]
         self.bridge = CvBridge()
         self.getCam = self.create_service(ImageRequest, 'getCam', self.cam_callback)
+        self.pub = self.create_publisher(Image, 'cam0', 10)
+        self.timer = self.create_timer(0.5, self.timerCallback)
+        
+    def timerCallback(self):
+        ret, image = self.cams[0].read()
+        msg = self.bridge.cv2_to_imgmsg(image, encoding="passthrough")
+        self.pub.publish(msg)
     
     def cam_callback(self, request, response):
+        print("requested")
         ret, image = self.cams[request.cam].read()
+        print(f"got image {ret}")
         response.frame = self.bridge.cv2_to_imgmsg(image, encoding="passthrough")
+        print("passed through")
         return response
     
     def start(self, data:Bool) -> None:

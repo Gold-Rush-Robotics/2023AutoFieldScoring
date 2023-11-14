@@ -2,7 +2,7 @@
 
 
 # -- SRV imports
-from Thruster.srv import ThrusterScore
+from grr_field_interfaces.srv import Thruster
 
 # -- Import
 import cv2 
@@ -18,7 +18,7 @@ from rclpy.node import Node
 class ThrusterCount(Node):
     def __init__(self):
         super().__init__('ThrusterCount')
-        self.srv = self.create_service(ThrusterScore, 'Counting_Thrusters', self.Thruster_count_callback)
+        self.srv = self.create_service(Thruster, 'Counting_Thrusters', self.Thruster_count_callback)
 
     def Thruster_count_callback(self, response):
         cam = cv2.VideoCapture(1)
